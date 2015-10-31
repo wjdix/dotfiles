@@ -33,6 +33,7 @@ values."
      emacs-lisp
      erc
      erlang
+     flymake-cursor
      flymake-elixir
      git
      markdown
@@ -206,10 +207,8 @@ user code."
   "Configuration function for user code.
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
-
   (setq erc-hide-list '("JOIN" "PART" "QUIT"))
-  (setq alchemist-execute-command "docker-compose run alchemist elixir")
-)
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

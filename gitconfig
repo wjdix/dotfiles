@@ -1,0 +1,13 @@
+[color]
+  ui = auto
+[alias]
+  st = status
+  staged = diff --staged
+  co = checkout
+[core]
+  excludesfile = ~/.gitignore
+[user]
+	email = william.j.dix@gmail.com
+	name = dix
+[push]
+  default = simple

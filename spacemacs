@@ -30,11 +30,13 @@ values."
      dash
      dockerfile
      elixir
+     elm
      emacs-lisp
      erc
      erlang
      flymake-cursor
      flymake-elixir
+     fsharp
      git
      markdown
      org
@@ -201,6 +203,7 @@ values."
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
+  (setq daypage-path "~/org/days/")
   )
 
 (defun dotspacemacs/user-config ()
@@ -208,7 +211,55 @@ user code."
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
   (setq erc-hide-list '("JOIN" "PART" "QUIT"))
+
+  (setq-default evil-escape-key-sequence "jj")
+
+  (defun find-daypage (&optional date)
+    "Go to the day page for the specified date,
+   or today's if none is specified."
+    (interactive (list
+                  (org-read-date "" 'totime nil nil
+                                 (current-time) "")))
+    (setq date (or date (current-time)))
+
+    (find-file (expand-file-name (concat daypage-path
+                                         (format-time-string "%Y-%m-%d" date) ".org")))
+
+    (when (eq 0 (buffer-size))
+      ;; Insert initial value for the page.
+      (insert (concat "* <"
+                      (format-time-string "%Y-%m-%d %a" date)
+                      "> Notes\n\n"))
+      (beginning-of-buffer)
+      (next-line 2)))
+
+  (defun todays-daypage ()
+    "Go straight to today's day page without prompting for a date."
+    (interactive)
+    (find-daypage))
+
+  (evil-leader/set-key
+    "Tp" 'todays-daypage
+    "Tf" 'find-daypage)
+
+  (setenv "ELM_HOME"
+          "/usr/local/lib/node_modules/elm")
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-agenda-files
+   (quote
+    ("~/org/facebook_verifications.org" "~/org/switch.org"))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))

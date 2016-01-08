@@ -213,6 +213,7 @@ layers configuration. You are free to put any user code."
   (setq erc-hide-list '("JOIN" "PART" "QUIT"))
 
   (setq-default evil-escape-key-sequence "jj")
+  (setq-default evil-escape-delay 0.2)
 
   (defun find-daypage (&optional date)
     "Go to the day page for the specified date,

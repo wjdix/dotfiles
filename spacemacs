@@ -34,12 +34,15 @@ values."
      emacs-lisp
      erc
      erlang
+     finance
      flymake-cursor
      flymake-elixir
      fsharp
      git
+     lua
      markdown
-     org
+     ocaml
+     (org :variables org-enable-github-support t)
      osx
      perspectives
      syntax-checking
@@ -100,7 +103,7 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro"
+   dotspacemacs-default-font '("Input Mono Narrow Extra Light"
                                :size 13
                                :weight normal
                                :width normal
@@ -211,6 +214,10 @@ user code."
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
   (setq erc-hide-list '("JOIN" "PART" "QUIT"))
+  (setq shell-command-switch "-lc")
+  (dolist (var (car (read-from-string (shell-command-to-string "opam config env --sexp"))))
+    (setenv (car var) (cadr var)))
+
 
   (setq-default evil-escape-key-sequence "jf")
   (setq-default evil-escape-delay 0.2)
@@ -238,6 +245,7 @@ layers configuration. You are free to put any user code."
     "Go straight to today's day page without prompting for a date."
     (interactive)
     (find-daypage))
+  (setq alchemist-hooks-test-on-save t)
 
   (evil-leader/set-key
     "Tp" 'todays-daypage
@@ -246,6 +254,10 @@ layers configuration. You are free to put any user code."
   (setenv "ELM_HOME"
           "/usr/local/lib/node_modules/elm")
   )
+
+(defun dotspacemacs/config ()
+  (setq org-export-backends '(beamer html latex md gfm)))
+
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

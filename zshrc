@@ -3,8 +3,6 @@ fpath=( "$HOME/.zfunctions" $fpath)
 autoload -U promptinit && promptinit
 prompt pure
 
-setopt no_global_rcs
-
 fpath=("$HOME/.zsh/completions" $fpath)
 autoload -U compinit && compinit
 
@@ -15,3 +13,12 @@ bindkey '^x^e' edit-command-line
 
 # Alias hub as git
 eval "$(hub alias -s)"
+
+# OPAM configuration
+. /Users/dix/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+
+# RBENV init
+eval "$(rbenv init -)"
+
+PATH="$HOME/.cargo/bin:$PATH"
+OPENSSL_DIR="/usr/local/opt/openssl"

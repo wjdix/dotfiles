@@ -22,3 +22,7 @@ eval "$(rbenv init -)"
 
 PATH="$HOME/.cargo/bin:$PATH"
 OPENSSL_DIR="/usr/local/opt/openssl"
+
+which gimme > /dev/null && eval "$(gimme 1.9.1)" 2>/dev/null
+export GOPATH=~/go
+export PATH="${GOPATH}/bin:${PATH}"

@@ -1,0 +1,8 @@
+asdf
+awscli
+d12frosted/emacs-plus/emacs-plus
+stow
+telnet
+tiger-vnc
+tree
+zsh

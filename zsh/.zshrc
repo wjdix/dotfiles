@@ -1,5 +1,5 @@
 EDITOR=emacs
-fpath=( "$HOME/.zfunctions" $fpath)
+fpath=( "$HOME/.zsh/pure" $fpath)
 autoload -U promptinit && promptinit
 prompt pure
 
@@ -12,4 +12,3 @@ bindkey '^xe' edit-command-line
 bindkey '^x^e' edit-command-line
 
 OPENSSL_DIR="/usr/local/opt/openssl"
-

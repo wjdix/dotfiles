@@ -6,8 +6,11 @@
   co = checkout
 [core]
   excludesfile = ~/.gitignore
+  autocrlf = input
 [user]
-	email = william.j.dix@gmail.com
-	name = dix
+  email = william.dix@getbraintree.com
+  name = dix
 [push]
   default = simple
+[github]
+  user = wjdix

@@ -481,8 +481,10 @@ dump."
   "Configuration function for user code.
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
-  (setq erc-hide-list '("JOIN" "PART" "QUIT"))
   (setq shell-command-switch "-lc")
+
+  (when (string= system-type "darwin")
+    (setq dired-use-ls-dired nil))
 
   (use-package lsp-mode
     :commands lsp
@@ -491,6 +493,7 @@ layers configuration. You are free to put any user code."
     :hook
     (elixir-mode . lsp)
     :init
+    (setq lsp-ui-doc-enable nil)
     (add-to-list 'exec-path "/Users/wdix/src/elixir-ls/release"))
 
   (add-to-list 'auto-mode-alist '("\\.pie\\'" . scheme-mode))
@@ -514,10 +517,6 @@ layers configuration. You are free to put any user code."
   (setq org-plantuml-jar-path
         (setq plantuml-path (expand-file-name "/Users/wdix/Downloads/plantuml.jar")))
 
-  (require 'eglot)
-
-  (add-hook 'elixir-mode-hook 'eglot-ensure)
-  (add-to-list 'eglot-server-programs '(elixir-mode "/Users/wdix/src/elixir-ls/release/language_server.sh"))
   (setq org-export-backends '(beamer html latex md gfm))
   (setq initial-major-mode 'org-mode))
 

@@ -1,0 +1,7 @@
+/.DS_Store
+*.swp
+.netrwhist
+tags
+/vim/.vim/plugged
+/vim/.vim/undodir
+

@@ -3,45 +3,44 @@ syntax on
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'ElmCast/elm-vim', {'commit': 'd22c0ba13afb554257a8c176962e2216cc18edd1'}
-Plug 'benmills/vimux', {'commit': '2285cefee9dfb2139ebc8299d11a6c8c0f21309e'} | Plug 'janko-m/vim-test', {'commit': '3d909e0190a35844aee4eb9684bf9eeecf70888f'}
-Plug 'bkad/CamelCaseMotion', {'commit': '3ae9bf93cce28ddc1f2776999ad516e153769ea4'}
-Plug 'cespare/vim-toml', {'commit': 'f6f79f3cc6740dfacca73a195857cbc45e778912'}
-Plug 'drewolson/pie-highlight.vim', {'commit': 'e289202abdd84a97fd2b59ee372a808a8cbd86aa'}
-Plug 'elixir-editors/vim-elixir', {'commit': '7e65a353ea332c79c348ac0d4487cb19529759cd'}
-Plug 'fatih/vim-go', {'tag': 'v1.18', 'do': ':GoUpdateBinaries'}
-Plug 'gabrielelana/vim-markdown', {'commit': 'd18363153771bdd9c932a217611326c5ce4fd812'}
-Plug 'idris-hackers/idris-vim', {'commit': '091ed6b267749927777423160eeab520109dd9c1'}
-Plug 'itchyny/vim-haskell-indent', {'commit': '32113104e9b548e9015f296dbe5b3803652ae1fc'}
-Plug 'jparise/vim-graphql', {'tag': '1.1'}
-Plug 'junegunn/fzf', {'tag': '0.17.4', 'dir': '~/.fzf', 'do': './install --bin'} | Plug 'junegunn/fzf.vim', {'commit': 'ce82e10630830bc37a50f706cc3b7216d24e5009'}
-Plug 'junegunn/goyo.vim', {'tag': '1.6.0'}
-Plug 'leafgarland/typescript-vim', {'commit': '0e9d92eead2df21abe342c4341c55536dd36b0af'}
-Plug 'nanotech/jellybeans.vim', {'commit': '36f4f82bd7749928ba4e61a58b2e76effb6ecd66'}
+Plug 'andys8/vim-elm-syntax', {'commit': '846a5929bff5795256fbca96707e451dbc755e36'}
+Plug 'benmills/vimux', {'commit': '37f41195e6369ac602a08ec61364906600b771f1'} | Plug 'janko-m/vim-test', {'commit': '330b0911f13bcb48a3e28dedcf71e19de5bd4864'}
+Plug 'cespare/vim-toml', {'commit': 'a4ec206052aa347d7df90dc4b6697b7f2b7929bc'}
+Plug 'dense-analysis/ale', {'commit': 'd6d2a0c77010db6a75a8942e2af9606971738c23'}
+Plug 'edwinb/idris2-vim', {'commit': '0fd4094cc3a26588cb57c666b8eadb6bf14348f5'}
+Plug 'elixir-editors/vim-elixir', {'commit': '95a0e08e9bc3ebb3d2606c83b06cef3db4092337'}
+Plug 'felipesere/pie-highlight.vim', {'commit': 'b20999e9df5cbdbd00b506aae35655aa97f604db'}
+Plug 'godlygeek/tabular', {'commit': '339091ac4dd1f17e225fe7d57b48aff55f99b23a'} | Plug 'plasticboy/vim-markdown', {'commit': 'da5a7ac96f517e0fd6f886bc3fbe27156ca1f946'}
+Plug 'jlanzarotta/bufexplorer', {'commit': '8014787603fff635dfae6afd4dbe9297673a0b39'}
+Plug 'jparise/vim-graphql', {'commit': '0858a26d7b3bd263f40b1844829651ea5a577364'}
+Plug 'junegunn/fzf', {'tag': '0.21.1', 'dir': '~/.fzf', 'do': './install --bin'} | Plug 'junegunn/fzf.vim', {'commit': '467c3277884240f7b5430f8f4d600e3415c38f3b'}
+Plug 'junegunn/goyo.vim', {'commit': '6b6ed2734084fdbb6315357ddcaecf9c8e6f143d'}
+Plug 'leafgarland/typescript-vim', {'commit': '17d85d8051ba21283e62a9101734981e10b732fd'}
+Plug 'nanotech/jellybeans.vim', {'commit': 'v1.7'}
+Plug 'neoclide/coc.nvim', {'commit': 'v0.0.78'}
 Plug 'neovimhaskell/haskell-vim', {'commit': 'b1ac46807835423c4a4dd063df6d5b613d89c731'}
 Plug 'pangloss/vim-javascript', {'tag': '1.2.5.1'}
 Plug 'purescript-contrib/purescript-vim', {'commit': '67ca4dc4a0291e5d8c8da48bffc0f3d2c9739e7f'}
 Plug 'rodjek/vim-puppet', {'commit': 'd881b93dc4a8ed1374ad44439aeeb47808a6b91a'}
-Plug 'rust-lang/rust.vim', {'commit': '8e75da9834abb22f8d7ece3f4ca4324a14fa18a6'}
-Plug 'scrooloose/nerdtree', {'tag': '5.0.0'}
-Plug 'tomtom/tcomment_vim', {'tag': '3.08'}
-Plug 'tpope/vim-endwise', {'commit': '0067ceda37725d01b7bd5bf249d63b1b5d4e2ab4', 'for': ['ruby']}
-Plug 'tpope/vim-fugitive', {'commit': '008b9570860f552534109b4f618cf2ddd145eeb4'}
-Plug 'tpope/vim-ragtag', {'commit': '0ef3f6a5778467fbca12b7874a4509593b209228'}
-Plug 'tpope/vim-rails', {'commit': 'abf87ba2ebe07e1a4112a7921c06842070ef2f81'}
-Plug 'udalov/kotlin-vim', {'commit': '0b0f27133319aaa83776855aeb32ac620eb99b3f'}
-Plug 'vim-erlang/vim-erlang-runtime', {'commit': 'bafee7c69b23cc2923fda9ac16d6f83433645f30'}
-Plug 'vim-ruby/vim-ruby', {'commit': '666adb5bcdfb2d21572a58fcdf7545a26bac32a0'}
+Plug 'rust-lang/rust.vim', {'commit': 'db0137dfad4690621e01dbae780fb4a2dd7dbf27'}
+Plug 'scrooloose/nerdtree', {'tag': '6.7.7'}
+Plug 'tomtom/tcomment_vim', {'commit': 'b9a075e36e9d8817b15e2edcdb8b6bf51a8d479c'}
+Plug 'tpope/vim-fugitive', {'commit': '98f67310aa3ae324d725a3b6b68a63e5a48372f4'}
+Plug 'tpope/vim-ragtag', {'commit': '6f1af76cd669c4fb07f0c4e20fdee3077620e3d8'}
+Plug 'tpope/vim-rails', {'commit': '184d12e85a17c85c548aeecc5b5c8c3182bd22e9'}
+Plug 'unisonweb/unison', {'commit': '050d309d2baac4b2b5f7a4e047cfd7b4299f33db', 'rtp': 'editor-support/vim'}
+Plug 'vim-erlang/vim-erlang-runtime', {'commit': 'bba638c6ff658201fd6cd3cacc96cd4c7f63258c'}
+Plug 'vim-ruby/vim-ruby', {'commit': 'fd49b25e08618b58db678c3f8ce6e443b1ad04e7'}
 Plug 'vim-scripts/indentpython.vim', {'commit': '6aaddfde21fe9e7acbe448b92b3cbb67f2fe1fc1'}
-Plug 'vim-scripts/matchit.zip', {'tag': '1.9'}
-Plug 'w0rp/ale', {'commit': 'f12d312aa4aa49c4698056933030cd5adb60b489'}
-Plug 'wlangstroth/vim-racket', {'commit': '164d93736d5cee79c77d4a8a3f722ef31d8d2f4c'}
 Plug 'google/vim-colorscheme-primary'
+Plug 'vmchale/dhall-vim', {'commit': '607958520f8bd4308fe52937e211f6db4ad84cf3'}
+Plug 'wlangstroth/vim-racket', {'commit': '65e6e61e4492fefdddd992158d784cc751401590'}
 
 call plug#end()
 
 set background=light
 set backspace=indent,eol,start
+set backupcopy=yes
 set completeopt-=preview
 set dir=/tmp//
 set hidden
@@ -57,16 +56,16 @@ set scrolloff=5
 set showmatch
 set smartcase
 set textwidth=0 nosmartindent tabstop=2 shiftwidth=2 softtabstop=2 expandtab
+set updatetime=300
 set wildignore+=*.pyc,*.o,*.class
 set wrap
+
+colorscheme jellybeans
 
 autocmd BufNewFile,BufRead *.md,*.markdown setlocal textwidth=80 spell
 autocmd BufNewFile,BufRead *.txt setlocal textwidth=80 spell
 autocmd FileType go setlocal noexpandtab
-autocmd FileType kotlin setlocal tabstop=4 shiftwidth=4 softtabstop=4
-autocmd FileType php setlocal tabstop=4 shiftwidth=4 softtabstop=4
-autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4
-autocmd FileType rust setlocal tabstop=4 shiftwidth=4 softtabstop=4
+autocmd FileType elm,kotlin,php,python,rust setlocal tabstop=4 shiftwidth=4 softtabstop=4
 autocmd FileType tex setlocal textwidth=80 spell
 
 function! GitGrepWord()
@@ -80,61 +79,52 @@ nnoremap <silent> <Leader>gw :GitGrepWord<CR>
 let html_use_css=1
 let html_number_lines=0
 let html_no_pre=1
+let g:no_html_toolbar = 'yes'
+
+let g:vim_markdown_frontmatter = 1
+let g:vim_markdown_new_list_item_indent = 2
 
 let g:rubycomplete_buffer_loading = 1
 
-let g:no_html_toolbar = 'yes'
+let g:go_highlight_trailing_whitespace_error = 0
 
-let NERDTreeIgnore=['\.pyc$', '\.o$', '\.class$', '\.ibc$', '\.idr\~$']
+let NERDTreeIgnore=['\.pyc$', '\.o$', '\.class$', '\.ibc$', '\.idr\~$', '^__pycache__$']
 
-let $FZF_DEFAULT_COMMAND = 'find * -type f 2>/dev/null | grep -v -E "deps\/|_build\/|node_modules\/|vendor\/|build_intellij\/"'
+let $FZF_DEFAULT_COMMAND = 'find * -type f 2>/dev/null | grep -v -E "deps\/|_build\/|node_modules\/|vendor\/|build_intellij\/|output\/"'
 let $FZF_DEFAULT_OPTS = '--reverse'
-let g:fzf_tags_command = 'ctags -R --exclude=".git" --exclude="node_modules" --exclude="vendor" --exclude="log" --exclude="tmp" --exclude="db" --exclude="pkg" --exclude="deps" --exclude="_build" --extra=+f .'
+let g:fzf_tags_command = 'ctags -R --exclude=".git" --exclude="node_modules" --exclude="vendor" --exclude="log" --exclude="tmp" --exclude="db" --exclude="pkg" --exclude="deps" --exclude="_build" --exclude="output" --extra=+f .'
 
 let g:test#strategy = 'vimux'
 let g:test#preserve_screen = 0
-let g:test#python#nose#file_pattern = '_test\.py\|test_.*\.py'
-let g:test#python#runner = 'nose'
+let g:test#python#runner = 'pytest'
+let g:test#python#pytest#executable = '.venv/bin/python -m pytest'
 
 let g:VimuxOrientation = 'h'
 let g:VimuxHeight = '40'
 
-let g:go_template_autocreate = 0
-let g:go_highlight_trailing_whitespace_error = 0
-let g:go_highlight_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_function_calls = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_build_constraints = 1
-
 let g:ale_linters = {
-\   'rust': ['rustc', 'cargo'],
-\   'go': ['gobuild'],
-\   'ruby': ['ruby'],
-\   'haskell': ['ghc', 'stack-ghc'],
 \   'idris': ['idris'],
-\   'typescript': ['tsserver'],
-\   'elixir': ['mix'],
+\   'javascript': ['eslint'],
+\   'racket': ['raco'],
+\   'ruby': ['ruby'],
 \}
 
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'elixir': ['mix_format'],
-\   'rust': ['rustfmt'],
-\   'go': ['gofmt', 'goimports'],
+\   'javascript': ['prettier'],
+\   'purescript': ['purty'],
+\   'typescript': ['prettier'],
 \}
 
-let g:ale_elixir_elixir_ls_release = $HOME . '/code/elixir-ls'
 let g:ale_fix_on_save = 1
-let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_insert_leave = 1
+let g:ale_lint_on_text_changed = 0
 let g:ale_linters_explicit = 1
 
-let ls_langs = 'typescript'
-execute 'autocmd Filetype ' . ls_langs . ' imap <C-X><C-O> <Plug>(ale_complete)'
-execute 'autocmd Filetype ' . ls_langs . ' nmap <C-]> <Plug>(ale_go_to_definition)'
-
-let g:haskell_indent_disable = 1
+let ls_langs = 'dhall,elixir,elm,go,haskell,javascript,purescript,python,rust,typescript'
+execute 'autocmd Filetype ' . ls_langs . ' inoremap <silent><expr> <C-X><C-O> coc#refresh()'
+execute 'autocmd Filetype ' . ls_langs . ' nmap <C-]> :call CocActionAsync(''jumpDefinition'')<CR>'
+execute 'autocmd Filetype ' . ls_langs . ' nnoremap <silent> K :call CocActionAsync(''doHover'')<CR>'
 
 let purescript_indent_case = 2
 let purescript_indent_where = 2
@@ -185,3 +175,5 @@ set statusline+=%P                        " percentage of file
 set undodir=~/.vim/undodir
 set undofile
 set undoreload=10000
+
+let NERDTreeShowHidden=1

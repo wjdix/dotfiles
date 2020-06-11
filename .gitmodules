@@ -1,3 +1,6 @@
 [submodule "zsh/.zsh/pure"]
 	path = zsh/.zsh/pure
 	url = https://github.com/sindresorhus/pure.git
+[submodule "vim_dotfiles"]
+	path = vim_dotfiles
+	url = git@github.com:wjdix/vim_dotfiles.git

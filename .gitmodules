@@ -4,3 +4,7 @@
 [submodule "vim_dotfiles"]
 	path = vim_dotfiles
 	url = git@github.com:wjdix/vim_dotfiles.git
+[submodule "emacs.d"]
+	path = emacs.d
+	url = git@github.com:syl20bnr/spacemacs.git
+	branch = develop

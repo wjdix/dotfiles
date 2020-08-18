@@ -19,3 +19,5 @@ bindkey '^x^e' edit-command-line
 OPENSSL_DIR="/usr/local/opt/openssl"
 
 zstyle :prompt:pure:git:stash show yes
+
+. ~/.asdf/asdf.sh

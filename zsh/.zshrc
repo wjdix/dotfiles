@@ -20,4 +20,8 @@ OPENSSL_DIR="/usr/local/opt/openssl"
 
 zstyle :prompt:pure:git:stash show yes
 
-. ~/.asdf/asdf.sh
+ASDF_SH="~/.asdf/asdf.sh"
+
+if [ -f "$ASDF_SH" ]; then
+    . $ASDF_SH
+fi

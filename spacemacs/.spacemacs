@@ -500,6 +500,9 @@ layers configuration. You are free to put any user code."
      (dhall-mode  . lsp))
     :init
     (setq lsp-ui-doc-enable nil)
+    (lsp--set-configuration '(:elixirLS, lsp-elixir--config-options))
+    (elixir/init-flycheck-credo)
+    (flycheck-add-next-checker 'lsp 'elixir-credo)
     (add-to-list 'exec-path "~/code/elixir-ls"))
 
   (setq flycheck-elixir-credo-strict t)
@@ -509,11 +512,6 @@ layers configuration. You are free to put any user code."
               (setq lsp-flycheck-live-reporting nil)
               (setq-local flycheck-check-syntax-automatically '(mode-enabled save))))
 
-  (add-hook 'lsp-after-initialize-hook
-            (lambda ()
-              (lsp--set-configuration '(:elixirLS, lsp-elixir--config-options))
-              (elixir/init-flycheck-credo)
-              (flycheck-add-next-checker 'lsp 'elixir-credo)))
   (use-package dhall-mode
     :ensure t
     :config

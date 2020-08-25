@@ -548,7 +548,7 @@ layers configuration. You are free to put any user code."
     (spacemacs/declare-prefix-for-mode 'elixir-mode
       "mt" "tests" "testing related functionality")
     (spacemacs/set-leader-keys-for-major-mode 'elixir-mode
-      "tb" 'exunit-verify-all
+      "tb" 'exunit-verify-all-in-umbrella
       "ta" 'exunit-verify
       "tk" 'exunit-rerun
       "tt" 'exunit-verify-single))

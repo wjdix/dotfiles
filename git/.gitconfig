@@ -8,9 +8,11 @@
   excludesfile = ~/.gitignore
   autocrlf = input
 [user]
-  email = william.dix@getbraintree.com
+  email = william.dix@greensill.com
   name = dix
 [push]
   default = simple
+[rebase]
+  autosquash = true
 [github]
   user = wjdix

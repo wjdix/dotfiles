@@ -548,6 +548,8 @@ layers configuration. You are free to put any user code."
     (spacemacs/declare-prefix-for-mode 'elixir-mode
       "mt" "tests" "testing related functionality")
     (spacemacs/set-leader-keys-for-major-mode 'elixir-mode
+      "ga" 'exunit-toggle-file-and-test
+      "gA" 'exunit-toggle-file-and-test-other-window
       "tb" 'exunit-verify-all
       "tu" 'exunit-verify-all-in-umbrella
       "ta" 'exunit-verify

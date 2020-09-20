@@ -31,37 +31,31 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(systemd
+   '(javascript
+     systemd
      auto-completion
      better-defaults
-     clojure
-     csv
      dap
      dash
      dhall
      docker
      (elixir :variables elixir-backend 'lsp)
      emacs-lisp
+     erc
      erlang
      git
      github
-     go
-     html
      lsp
-     (ruby :variables ruby-test-runner 'ruby-test)
      sql
      markdown
      neotree
      (org :variables org-enable-github-support t)
+     pdf
      protobuf
-     rust
      (syntax-checking :variables syntax-checking-use-original-bitmaps t)
      systemd
-     terraform
+     (terraform :variables terraform-backend 'lsp terraform-auto-format-on-save t)
      themes-megapack
-     (typescript :variables
-                   typescript-backend 'tide)
-     purescript
      yaml
      )
    ;; List of additional packages that will be installed without being
@@ -71,7 +65,14 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(exunit keychain-environment)
+   dotspacemacs-additional-packages
+   '(
+     exunit
+     (gleam-mode :location (recipe :fetcher github :repo "gleam-lang/gleam-mode"))
+     org-ref
+     (org-roam :location (recipe :fetcher github :repo "org-roam/org-roam" :branch "scratch"))
+     org-roam-bibtex
+     ob-elixir)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -214,7 +215,7 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(all-the-icons :separator :cup :separator-scale 1.5)
+   dotspacemacs-mode-line-theme '(spacemacs :separator :cup :separator-scale 1.5)
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -222,7 +223,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Source Code Pro for Powerline"
-                               :size 13.0
+                               :size 16.0
                                :weight normal
                                :width normal)
 
@@ -491,6 +492,33 @@ layers configuration. You are free to put any user code."
   (when (string= system-type "darwin")
     (setq dired-use-ls-dired nil))
 
+  (setq erc-hide-list '("JOIN" "PART" "QUIT"))
+
+  (use-package org-roam
+    :after org
+    :hook ((after-init . org-roam-mode) (org-mode . org-roam-mode))
+    :custom
+    (org-roam-directory "~/roam/")
+    :init
+    (progn
+      (spacemacs/declare-prefix "O" "org-roam" "org-roam")
+      (spacemacs/set-leader-keys
+        "Ort" 'org-roam-dailies-capture-today
+        "OrT" 'org-roam-dailies-find-today
+        "Orl" 'org-roam
+        "Orf" 'org-roam-find-file
+        "OrF" 'org-roam-capture
+        "Ori" 'org-roam-insert
+        "Org" 'org-roam-show-graph)))
+
+  (use-package org-roam-bibtex
+    :after org-roam
+    :hook (org-roam-mode . org-roam-bibtex-mode)
+    :bind (:map org-mode-map
+                (("C-c n a" . orb-note-actions))))
+
+  (require 'org-roam-protocol)
+
   (use-package lsp-mode
     :commands lsp
     :ensure t
@@ -499,12 +527,18 @@ layers configuration. You are free to put any user code."
     (add-hook 'before-save-hook #'lsp-format-buffer)
     :hook
     ((elixir-mode . lsp)
-     (dhall-mode  . lsp))
+     (dhall-mode  . lsp)
+     (terraform-mode . lsp))
     :init
     (setq lsp-ui-doc-enable nil)
-    (add-to-list 'exec-path "~/code/elixir-ls"))
+    (add-to-list 'exec-path "~/code/elixir-ls")
+    (require 'dap-elixir)
+    (setq flycheck-elixir-credo-strict t))
 
-  (setq flycheck-elixir-credo-strict t)
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection '("terraform-ls" "serve"))
+                    :major-modes '(terraform-mode)
+                    :server-id 'terraform-ls))
 
   (add-hook 'elixir-mode-hook
             (lambda ()
@@ -524,6 +558,10 @@ layers configuration. You are free to put any user code."
      dhall-format-arguments (\` ("--ascii"))
      dhall-use-header-line nil))
 
+  (use-package gleam-mode
+    :ensure t
+    :init (add-to-list 'auto-mode-alist '("\\.gleam" . gleam-mode)))
+
   (add-hook 'clojure-mode-hook #'aggressive-indent-mode)
   (setq clojure-indent-style 'align-argurments)
   (setq clojure-align-forms-automatically t)
@@ -536,12 +574,32 @@ layers configuration. You are free to put any user code."
   (org-babel-do-load-languages
    'org-babel-load-languages
    '(;; Other Babel Languages
-    (plantuml . t)))
-  (setq org-plantuml-jar-path
-        (setq plantuml-path (expand-file-name "/Users/wdix/Downloads/plantuml.jar")))
+     (elixir . t)
+     (plantuml . t)))
 
   (setq org-export-backends '(beamer html latex md gfm))
   (setq initial-major-mode 'org-mode)
+
+  (setq org-todo-keywords
+        (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+               (sequence "WAITING(w@/!)" "HOLD(@/!)" "|" "CANCELLED(c@/!)"))))
+
+  (setq org-todo-keyword-faces
+        (quote (("TODO" :foreground "red" :weight bold)
+                ("NEXT" :foreground "blue" :weight bold)
+                ("DONE" :foreground "forest green" :weight bold)
+                ("WAITING" :foreground "orange" :weight bold)
+                ("HOLD" :foreground "magenta" :weight bold)
+                ("CANCELLED" :foreground "forest green" :weight bold))))
+
+  (setq org-todo-state-tags-triggers
+        (quote (("CANCELLED" ("CANCELLED" . t))
+                ("WAITING" ("WAITING" . t))
+                ("HOLD" ("WAITING") ("HOLD" . t))
+                (done ("WAITING") ("HOLD"))
+                ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+                ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+                ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
 
   ;; Configure exunit to work with elixir-mode
   (with-eval-after-load 'elixir-mode
@@ -563,7 +621,30 @@ layers configuration. You are free to put any user code."
           :stick t
           :height 0.4
           :noselect t)
-        popwin:special-display-config)  )
+        popwin:special-display-config)
+
+  (setq org-src-fontify-natively t)
+
+  (defun my-mmm-markdown-auto-class (lang &optional submode)
+      "Define a mmm-mode class for LANG in `markdown-mode' using SUBMODE.
+If SUBMODE is not provided, use `LANG-mode' by default."
+      (let ((class (intern (concat "markdown-" lang)))
+            (submode (or submode (intern (concat lang "-mode"))))
+            (front (concat "^{% highlight " lang " %}[\n\r]+"))
+            (back "^{% endhighlight %}"))
+        (mmm-add-classes (list (list class :submode submode :front front :back back)))
+        (mmm-add-mode-ext-class 'markdown-mode nil class)))
+
+    ;; Mode names that derive directly from the language name
+    (mapc 'my-mmm-markdown-auto-class
+          '("elixir" "dockerfile"))
+
+
+  (use-package mmm-mode
+    :ensure t
+    :config
+    (setq mmm-global-mode 'maybe))
+  )
 
 (defun dotspacemacs/emacs-custom-settings ()
   "Emacs custom settings.
@@ -614,9 +695,9 @@ This function is called at the very end of Spacemacs initialization."
      ("reg" "%(binary) -f %(ledger-file) reg")
      ("payee" "%(binary) -f %(ledger-file) reg @%(payee)")
      ("account" "%(binary) -f %(ledger-file) reg %(account)")))
- '(org-agenda-files '("~/org/facebook_verifications.org" "~/org/switch.org"))
+ '(org-agenda-files '("~/roam/open-source.org" "~/roam/blog-posts.org"))
  '(package-selected-packages
-   '(keychain-environment systemd tern eglot eldoc xref flymake jsonrpc project lsp-mode geiser flyspell-correct-helm flyspell-correct auto-dictionary dash-docs reformatter lv parseedn parseclj a transient idris-mode prop-menu magit-gh-pulls github-search github-clone github-browse-file gist gh marshal logito pcache white-sand-theme rebecca-theme org-mime exotica-theme ghub treepy graphql sesman go-guru go-eldoc company-go go-mode ob-elixir zenburn-theme zen-and-art-theme yapfify yaml-mode ws-butler winum which-key web-mode volatile-highlights vi-tilde-fringe uuidgen utop use-package unfill underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tuareg caml toxi-theme toml-mode toc-org terraform-mode hcl-mode tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit sunny-day-theme sublime-themes subatomic256-theme subatomic-theme sql-indent spaceline powerline spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle slim-mode slack emojify circe oauth2 websocket ht seti-theme scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reverse-theme reveal-in-osx-finder restart-emacs rbenv rake rainbow-delimiters railscasts-theme racer pyvenv pytest pyenv-mode py-isort purple-haze-theme puppet-mode pug-mode professional-theme popwin planet-theme pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme persp-mode pcre2el pbcopy paradox ox-gfm osx-trash osx-dictionary orgit organic-green-theme org-projectile org-category-capture org-present org-pomodoro org-download org-bullets open-junk-file omtose-phellack-theme oldlace-theme ocp-indent occidental-theme obsidian-theme org-plus-contrib noctilux-theme neotree naquadah-theme mwim mustang-theme move-text monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minitest minimal-theme merlin material-theme markdown-toc markdown-mode majapahit-theme magit-gitflow madhat2r-theme macrostep lush-theme lua-mode lorem-ipsum live-py-mode linum-relative link-hint light-soap-theme less-css-mode ledger-mode launchctl jinja2-mode jbeans-theme jazz-theme ir-black-theme intero inkpot-theme info+ indent-guide hy-mode dash-functional hungry-delete htmlize hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt heroku-theme hemisu-theme help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make projectile helm-hoogle helm-gitignore request helm-flx helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag hc-zenburn-theme haskell-snippets haml-mode gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md gandalf-theme fuzzy fsharp-mode company-quickhelp flycheck-rust flycheck-pos-tip pos-tip flycheck-mix flycheck-ledger flycheck-haskell flycheck-elm flycheck-credo flycheck flx-ido flx flatui-theme flatland-theme fill-column-indicator farmhouse-theme fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit git-commit with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree espresso-theme erlang erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks emmet-mode elm-mode elisp-slime-nav dumb-jump dracula-theme dockerfile-mode docker json-mode tablist magit-popup docker-tramp json-snatcher json-reformat django-theme diminish dash-at-point darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cython-mode cyberpunk-theme csv-mode company-web web-completion-data company-statistics company-ghci company-ghc ghc haskell-mode company-cabal company-ansible company-anaconda column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized cmm-mode clues-theme clojure-snippets clj-refactor hydra inflections edn multiple-cursors paredit peg clean-aindent-mode cider-eval-sexp-fu eval-sexp-fu highlight cider seq spinner queue clojure-mode chruby cherry-blossom-theme cargo rust-mode busybee-theme bundler inf-ruby bubbleberry-theme birds-of-paradise-plus-theme bind-map bind-key badwolf-theme auto-yasnippet yasnippet auto-highlight-symbol auto-compile packed apropospriate-theme anti-zenburn-theme ansible-doc ansible anaconda-mode pythonic f ample-zen-theme ample-theme alert log4e gntp alect-themes alchemist s company dash elixir-mode pkg-info epl aggressive-indent afternoon-theme adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup))
+   '(org-ref key-chord helm-bibtex org-roam-bibtex bibtex-completion biblio parsebib biblio-core gleam-mode mmm modus-vivendi-theme modus-operandi-theme org-roam emacsql-sqlite3 json-navigator hierarchy web-beautify tide typescript-mode prettier-js nodejs-repl livid-mode skewer-mode js2-refactor js2-mode js-doc import-js grizzl impatient-mode simple-httpd helm-gtags ggtags counsel-gtags counsel swiper ivy add-node-modules-path helm-lsp dap-mode pdf-tools keychain-environment systemd tern eglot eldoc xref flymake jsonrpc project lsp-mode geiser flyspell-correct-helm flyspell-correct auto-dictionary dash-docs reformatter lv parseedn parseclj a transient idris-mode prop-menu magit-gh-pulls github-search github-clone github-browse-file gist gh marshal logito pcache white-sand-theme rebecca-theme org-mime exotica-theme ghub treepy graphql sesman go-guru go-eldoc company-go go-mode ob-elixir zenburn-theme zen-and-art-theme yapfify yaml-mode ws-butler winum which-key web-mode volatile-highlights vi-tilde-fringe uuidgen utop use-package unfill underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tuareg caml toxi-theme toml-mode toc-org terraform-mode hcl-mode tao-theme tangotango-theme tango-plus-theme tango-2-theme tagedit sunny-day-theme sublime-themes subatomic256-theme subatomic-theme sql-indent spaceline powerline spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle slim-mode slack emojify circe oauth2 websocket ht seti-theme scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reverse-theme reveal-in-osx-finder restart-emacs rbenv rake rainbow-delimiters railscasts-theme racer pyvenv pytest pyenv-mode py-isort purple-haze-theme puppet-mode pug-mode professional-theme popwin planet-theme pip-requirements phoenix-dark-pink-theme phoenix-dark-mono-theme persp-mode pcre2el pbcopy paradox ox-gfm osx-trash osx-dictionary orgit organic-green-theme org-projectile org-category-capture org-present org-pomodoro org-download org-bullets open-junk-file omtose-phellack-theme oldlace-theme ocp-indent occidental-theme obsidian-theme org-plus-contrib noctilux-theme neotree naquadah-theme mwim mustang-theme move-text monokai-theme monochrome-theme molokai-theme moe-theme mmm-mode minitest minimal-theme merlin material-theme markdown-toc markdown-mode majapahit-theme magit-gitflow madhat2r-theme macrostep lush-theme lua-mode lorem-ipsum live-py-mode linum-relative link-hint light-soap-theme less-css-mode ledger-mode launchctl jinja2-mode jbeans-theme jazz-theme ir-black-theme intero inkpot-theme info+ indent-guide hy-mode dash-functional hungry-delete htmlize hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt heroku-theme hemisu-theme help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make projectile helm-hoogle helm-gitignore request helm-flx helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag hc-zenburn-theme haskell-snippets haml-mode gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md gandalf-theme fuzzy fsharp-mode company-quickhelp flycheck-rust flycheck-pos-tip pos-tip flycheck-mix flycheck-ledger flycheck-haskell flycheck-elm flycheck-credo flycheck flx-ido flx flatui-theme flatland-theme fill-column-indicator farmhouse-theme fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit git-commit with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree espresso-theme erlang erc-yt erc-view-log erc-terminal-notifier erc-social-graph erc-image erc-hl-nicks emmet-mode elm-mode elisp-slime-nav dumb-jump dracula-theme dockerfile-mode docker json-mode tablist magit-popup docker-tramp json-snatcher json-reformat django-theme diminish dash-at-point darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cython-mode cyberpunk-theme csv-mode company-web web-completion-data company-statistics company-ghci company-ghc ghc haskell-mode company-cabal company-ansible company-anaconda column-enforce-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized cmm-mode clues-theme clojure-snippets clj-refactor hydra inflections edn multiple-cursors paredit peg clean-aindent-mode cider-eval-sexp-fu eval-sexp-fu highlight cider seq spinner queue clojure-mode chruby cherry-blossom-theme cargo rust-mode busybee-theme bundler inf-ruby bubbleberry-theme birds-of-paradise-plus-theme bind-map bind-key badwolf-theme auto-yasnippet yasnippet auto-highlight-symbol auto-compile packed apropospriate-theme anti-zenburn-theme ansible-doc ansible anaconda-mode pythonic f ample-zen-theme ample-theme alert log4e gntp alect-themes alchemist s company dash elixir-mode pkg-info epl aggressive-indent afternoon-theme adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup))
  '(pdf-view-midnight-colors '("#b2b2b2" . "#292b2e"))
  '(psc-ide-add-import-on-completion t t)
  '(psc-ide-rebuild-on-save nil t)
@@ -633,5 +714,5 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:background nil)))))
+ )
 )

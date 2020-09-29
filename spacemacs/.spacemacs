@@ -223,7 +223,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font or prioritized list of fonts.
    dotspacemacs-default-font '("Source Code Pro for Powerline"
-                               :size 16.0
+                               :size 14.0
                                :weight normal
                                :width normal)
 
@@ -498,7 +498,7 @@ layers configuration. You are free to put any user code."
     :after org
     :hook ((after-init . org-roam-mode) (org-mode . org-roam-mode))
     :custom
-    (org-roam-directory "~/roam/")
+    (org-roam-directory "~/Dropbox/roam/")
     :init
     (progn
       (spacemacs/declare-prefix "O" "org-roam" "org-roam")
@@ -525,6 +525,10 @@ layers configuration. You are free to put any user code."
     :diminish lsp-mode
     :config
     (add-hook 'before-save-hook #'lsp-format-buffer)
+    (dolist (match
+             '("[/\\\\].elixir_ls$"
+               "[/\\\\]_build$"))
+      (add-to-list 'lsp-file-watch-ignored match))
     :hook
     ((elixir-mode . lsp)
      (dhall-mode  . lsp)
@@ -601,6 +605,12 @@ layers configuration. You are free to put any user code."
                 ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
                 ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
 
+  (defun mix-lint ()
+    (interactive)
+    (let ((default-directory (exunit-umbrella-project-root))
+          (compilation-environment exunit-environment))
+      (exunit-do-compile (s-join " " '("mix" "lint")))))
+
   ;; Configure exunit to work with elixir-mode
   (with-eval-after-load 'elixir-mode
     (spacemacs/declare-prefix-for-mode 'elixir-mode
@@ -612,6 +622,7 @@ layers configuration. You are free to put any user code."
       "tu" 'exunit-verify-all-in-umbrella
       "ta" 'exunit-verify
       "tk" 'exunit-rerun
+      "tl" 'mix-lint
       "tt" 'exunit-verify-single))
 
   ;; Configure how exunit test window appears

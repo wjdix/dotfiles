@@ -215,7 +215,7 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(spacemacs :separator :cup :separator-scale 1.5)
+   dotspacemacs-mode-line-theme 'spacemacs
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -353,7 +353,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil unicode symbols are displayed in the mode line.
    ;; If you use Emacs as a daemon and wants unicode characters only in GUI set
    ;; the value to quoted `display-graphic-p'. (default t)
-   dotspacemacs-mode-line-unicode-symbols 'display-graphic-p
+   dotspacemacs-mode-line-unicode-symbols t
 
    ;; If non-nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters point
@@ -442,7 +442,6 @@ It should only modify the values of Spacemacs settings."
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
    dotspacemacs-whitespace-cleanup 'trailing
-   dotspacemacs-mode-line-theme 'all-the-icons
 
    ;; If non nil activate `clean-aindent-mode' which tries to correct
    ;; virtual indentation of simple modes. This can interfer with mode specific
@@ -490,34 +489,33 @@ layers configuration. You are free to put any user code."
   (setq shell-command-switch "-lc")
 
   (when (string= system-type "darwin")
-    (setq dired-use-ls-dired nil))
+    (setq dired-use-ls-dired nil)
+    (use-package org-roam
+      :after org
+      :hook ((after-init . org-roam-mode) (org-mode . org-roam-mode))
+      :custom
+      (org-roam-directory "~/Dropbox/roam/")
+      :init
+      (progn
+        (spacemacs/declare-prefix "O" "org-roam" "org-roam")
+        (spacemacs/set-leader-keys
+          "Ort" 'org-roam-dailies-capture-today
+          "OrT" 'org-roam-dailies-find-today
+          "Orl" 'org-roam
+          "Orf" 'org-roam-find-file
+          "OrF" 'org-roam-capture
+          "Ori" 'org-roam-insert
+          "Org" 'org-roam-show-graph)))
+
+    (use-package org-roam-bibtex
+      :after org-roam
+      :hook (org-roam-mode . org-roam-bibtex-mode)
+      :bind (:map org-mode-map
+                  (("C-c n a" . orb-note-actions))))
+
+    (require 'org-roam-protocol))
 
   (setq erc-hide-list '("JOIN" "PART" "QUIT"))
-
-  (use-package org-roam
-    :after org
-    :hook ((after-init . org-roam-mode) (org-mode . org-roam-mode))
-    :custom
-    (org-roam-directory "~/Dropbox/roam/")
-    :init
-    (progn
-      (spacemacs/declare-prefix "O" "org-roam" "org-roam")
-      (spacemacs/set-leader-keys
-        "Ort" 'org-roam-dailies-capture-today
-        "OrT" 'org-roam-dailies-find-today
-        "Orl" 'org-roam
-        "Orf" 'org-roam-find-file
-        "OrF" 'org-roam-capture
-        "Ori" 'org-roam-insert
-        "Org" 'org-roam-show-graph)))
-
-  (use-package org-roam-bibtex
-    :after org-roam
-    :hook (org-roam-mode . org-roam-bibtex-mode)
-    :bind (:map org-mode-map
-                (("C-c n a" . orb-note-actions))))
-
-  (require 'org-roam-protocol)
 
   (use-package lsp-mode
     :commands lsp

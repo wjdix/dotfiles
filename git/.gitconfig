@@ -16,4 +16,4 @@
 [rebase]
   autosquash = true
 [github]
-  user = wjdix
+	user = wjdix

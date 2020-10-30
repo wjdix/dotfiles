@@ -240,7 +240,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-emacs-leader-key "M-m"
    ;; Major mode leader key is a shortcut key which is the equivalent of
    ;; pressing `<leader> m`. Set it to `nil` to disable it. (default ",")
-   dotspacemacs-major-mode-leader-key ","
+   dotspacemacs-major-mode-leader-key "\\"
    ;; Major mode leader key accessible in `emacs state' and `insert state'.
    ;; (default "C-M-m" for terminal mode, "<M-return>" for GUI mode).
    ;; Thus M-RET should work as leader key in both GUI and terminal modes.
@@ -618,17 +618,17 @@ layers configuration. You are free to put any user code."
   ;; Configure exunit to work with elixir-mode
   (with-eval-after-load 'elixir-mode
     (spacemacs/declare-prefix-for-mode 'elixir-mode
-      "mt" "tests" "testing related functionality")
+      "mr" "run" "run commands")
     (spacemacs/set-leader-keys-for-major-mode 'elixir-mode
       "ga" 'exunit-toggle-file-and-test
       "gA" 'exunit-toggle-file-and-test-other-window
-      "tb" 'exunit-verify-all
-      "tu" 'exunit-verify-all-in-umbrella
-      "ta" 'exunit-verify
-      "tl" 'exunit-rerun
-      "tL" 'mix-lint
-      "te" 'mix-external
-      "tt" 'exunit-verify-single))
+      "rb" 'exunit-verify
+      "ra" 'exunit-verify-all-in-umbrella
+      "rA" 'exunit-verify-all
+      "rl" 'exunit-rerun
+      "rL" 'mix-lint
+      "re" 'mix-external
+      "rf" 'exunit-verify-single))
 
   ;; Configure how exunit test window appears
   (push '("*exunit-compilation*"

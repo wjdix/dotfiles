@@ -221,11 +221,18 @@ It should only modify the values of Spacemacs settings."
    ;; (default t)
    dotspacemacs-colorize-cursor-according-to-state t
 
+   font-size (if window-system
+                 (if (< (x-display-pixel-width) 1600)
+                     10.0
+                     16.0)
+                 16.0)
+
    ;; Default font or prioritized list of fonts.
-   dotspacemacs-default-font '("Source Code Pro for Powerline"
-                               :size 16.0
-                               :weight normal
-                               :width normal)
+   dotspacemaces-default-font '("Source Code Pro for Powerline"
+                                :size font-size
+                                :weight normal
+                                :width normal)
+
 
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"

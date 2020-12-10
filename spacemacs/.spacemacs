@@ -478,6 +478,9 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  (when (string= system-type "darwin")
+    (setq insert-directory-program "/usr/local/bin/gls")
+    (setq dired-use-ls-dired nil))
   )
 
 (defun dotspacemacs/user-load ()
@@ -493,7 +496,9 @@ dump."
 layers configuration. You are free to put any user code."
   (setq shell-command-switch "-lc")
 
+
   (when (string= system-type "darwin")
+    (setq insert-directory-program "/usr/local/bin/gls")
     (setq dired-use-ls-dired nil)
     (use-package org-roam
       :after org
@@ -688,7 +693,7 @@ This function is called at the very end of Spacemacs initialization."
      ("git.savannah.gnu.org" . "gnu")
      ("gist.github.com" . "gist")
      ("git.sr.ht" . "sourcehut")))
- '(custom-enabled-themes '(sanityinc-solarized-light))
+ '(custom-enabled-themes '(solarized-light-high-contrast))
  '(custom-safe-themes
    '("4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" default))
  '(dap-mode t nil (dap-mode))

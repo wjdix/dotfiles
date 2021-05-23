@@ -5,11 +5,11 @@
   staged = diff --staged
   co = checkout
 [core]
-  excludesfile = ~/.gitignore
+	excludesfile = /Users/williamdix/.gitignore
   autocrlf = input
   editor = emacsclient -t -a=\"\"
 [user]
-  email = william.dix@greensill.com
+  email = wdix@gofundme.com
   name = dix
 [push]
   default = simple

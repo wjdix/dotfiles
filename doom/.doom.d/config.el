@@ -29,7 +29,7 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-roam-directory "~/Dropbox/roam")
+(setq org-roam-directory (file-truename "~/Dropbox/roam"))
 (setq org-directory "~/Dropbox/roam/")
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
@@ -65,4 +65,4 @@
   (add-to-list 'org-latex-packages-alist '("newfloat" "minted")))
 
 
-(unpin! org-roam company-org-roam)
+(setq org-roam-v2-ack t)

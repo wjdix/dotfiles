@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: plantuml
+# key: plantuml
+# --
+
+#+name: ${1: diagram-name}
+#+BEGIN_SRC plantuml :file $1.png :exports results :results file
+
+$0
+
+#+END_SRC
+
+#+results: $1
+[[file:$1.png]]

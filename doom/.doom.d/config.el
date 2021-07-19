@@ -38,7 +38,6 @@
 
 (setq-default evil-escape-key-sequence "jf")
 
-
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
@@ -57,6 +56,13 @@
 ;; they are implemented.
 ;;
 ;;(after! )
-;;
-(use-package! elixir-mode
-  :config (add-hook 'before-save-hook #'lsp-format-buffer nil))
+
+(after! ox-latex
+  (setq org-latex-listings 'minted
+        org-latex-pdf-process
+        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+  (add-to-list 'org-latex-packages-alist '("newfloat" "minted")))
+
+
+(unpin! org-roam company-org-roam)

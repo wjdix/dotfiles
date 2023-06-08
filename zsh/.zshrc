@@ -5,7 +5,7 @@ prompt pure
 
 if type brew &>/dev/null; then
     fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
-    . $(brew --prefix asdf)/asdf.sh
+    . $(brew --prefix asdf)/libexec/asdf.sh
 fi
 
 fpath=("$HOME/.zsh/completions" $fpath)
